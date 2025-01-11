@@ -4,7 +4,7 @@ const router = Router();
 
 router.post("/", async (req, res) => {
   try {
-    if (!req.body.products) throw new Error("products is required");
+    // if (!req.body.products) throw new Error("products is required");
     const cart = await cartManager.createCart();
     res.json(cart);
   } catch (error) {

@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:pid", async (req, res) => {
   try {
-    const product = await prodManager.getById(req.params.id);
+    const product = await prodManager.getById(req.params.pid);
     res.json(product);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
 router.put("/:pid", async (req, res) => {
   try {
     const product = await prodManager.update(req.body, req.params.pid);
-    res.json(product);
+    res.send(`${product.title} se actualizo correctamente`);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -49,7 +49,7 @@ router.put("/:pid", async (req, res) => {
 router.delete("/:pid", async (req, res) => {
   try {
     const product = await prodManager.delete(req.params.pid);
-    res.json(product);
+    res.send(`${product.title} se elimino correctamente`);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
