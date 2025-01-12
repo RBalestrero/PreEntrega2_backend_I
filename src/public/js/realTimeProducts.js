@@ -34,8 +34,59 @@ document.getElementById("addProduct").addEventListener("click", async () => {
     `,
     confirmButtonText: "Añadir",
     focusConfirm: false,
+    showDenyButton: true,
+    DenyButtonText: "Cancelar",
 
+    preDeny: () => {
+      Swal.fire({
+        title: "Proceso cancelado",
+        icon: "error"
+      });
+      return false;
+    },
     preConfirm: () => {
+      if (document.getElementById("title").value === "") {
+        Swal.fire({
+          title: "El campo 'Titulo' es obligatorio",
+          icon: "error"
+        });
+        return false;
+      }
+      if (document.getElementById("description").value === "") {
+        Swal.fire({
+          title: "El campo 'Descripcion' es obligatorio",
+          icon: "error"
+        });
+        return false;
+      }
+      if (document.getElementById("price").value === "") {
+        Swal.fire({
+          title: "El campo 'Precio' es obligatorio",
+          icon: "error"
+        });
+        return false;
+      }
+      if (document.getElementById("stock").value === "") {
+        Swal.fire({
+          title: "El campo 'Stock' es obligatorio",
+          icon: "error"
+        });
+        return false;
+      }
+      if (document.getElementById("code").value === "") {
+        Swal.fire({
+          title: "El campo 'Codigo' es obligatorio",
+          icon: "error"
+        });
+        return false;
+      }
+      if (document.getElementById("category").value === "") {
+        Swal.fire({
+          title: "El campo 'Categoria' es obligatorio",
+          icon: "error"
+        });
+        return false;
+      }
       return {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
