@@ -32,13 +32,19 @@ app.use("/api/carts", cartRouter);
 app.use("/realtimeproducts", realTimeProductsRouter);
 
 socketServer.on('connection', (socket) => {
-    console.log('Nuevo cliente conectado');
-    
     socket.on("getProducts", async () => {
         try {
-            console.log("obteniendo productos");
             const productos = await prodManager.getAll();
             socket.emit("productos", productos);
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    socket.on("getProductsHome", async () => {
+        try {
+            const productos = await prodManager.getAll();
+            socket.emit("productosHome", productos);
         } catch (error) {
             console.log(error);
         }
@@ -47,6 +53,16 @@ socketServer.on('connection', (socket) => {
     socket.on("deleteProduct", async (id) => {
         try {
             await prodManager.delete(id);
+            const productos = await prodManager.getAll();
+            socketServer.emit("productos", productos);
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    socket.on("addProduct", async (product) => {
+        try {
+            await prodManager.create(product);
             const productos = await prodManager.getAll();
             socketServer.emit("productos", productos);
         } catch (error) {
