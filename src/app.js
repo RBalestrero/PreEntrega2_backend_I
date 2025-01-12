@@ -1,10 +1,11 @@
 import express from "express";
-import productRouter from "./api/products/products.router.js";
-import cartRouter from "./api/carts/carts.router.js";
+import productRouter from "./routes/api/products/products.router.js";
+import cartRouter from "./routes/api/carts/carts.router.js";
+import realTimeProductsRouter from "./routes/views.router.js";
 import path from 'path';
 import { Server } from "socket.io";
 import handlebars from "express-handlebars";
-import viewsRouter from "./views/views.router.js";
+import viewsRouter from "./routes/views.router.js";
 import { __dirname } from './utils.js';
 import { prodManager } from "./managers/product.manager.js";
 
@@ -28,14 +29,26 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
+app.use("/realtimeproducts", realTimeProductsRouter);
 
 socketServer.on('connection', (socket) => {
     console.log('Nuevo cliente conectado');
-
+    
     socket.on("getProducts", async () => {
         try {
+            console.log("obteniendo productos");
             const productos = await prodManager.getAll();
             socket.emit("productos", productos);
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    socket.on("deleteProduct", async (id) => {
+        try {
+            await prodManager.delete(id);
+            const productos = await prodManager.getAll();
+            socketServer.emit("productos", productos);
         } catch (error) {
             console.log(error);
         }
